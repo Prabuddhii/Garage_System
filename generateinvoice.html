@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SINHE Auto Zone Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f9;
+        }
+
+        .invoice-container {
+            width: 100%;
+            max-width: 21cm;
+            margin: 20px auto;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #ccc;
+        }
+
+        #navbar-logo1 {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            max-width: 250px;
+            height: 200px;
+        }
+
+        #navbar-logo {
+            position: absolute;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            max-width: 350px;
+            height: 200px;
+        }
+
+        .customer-details {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        input, select {
+            padding: 8px;
+            width: 200px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        section {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #6ea0c2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #4dbcd8;
+        }
+
+        .remove-btn {
+            padding: 6px 12px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            background-color: #c0392b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        table th {
+            background: #f8f8f8;
+            font-weight: bold;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        footer {
+            text-align: right;
+            font-weight: bold;
+            padding-top: 10px;
+            border-top: 2px solid #ccc;
+        }
+
+        .total-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2b2727;
+            background-color: #4CAF50;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 10px;
+            margin-right: 30px;
+        }
+
+        #suggestion-list {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            width: 30%;
+            background-color: white;
+            border: 1px solid #ccc;
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #suggestion-list li {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        #suggestion-list li:hover {
+            background-color: #f1f1f1;
+        }
+
+        #service-list, #price-range {
+            width: 220px;
+            margin-right: 10px;
+        }
+
+        #suggestion-list, #mobile-suggestion-list {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 200px;
+        }
+
+        #suggestion-list li, #mobile-suggestion-list li {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        #suggestion-list li:hover, #mobile-suggestion-list li:hover {
+            background-color: #f1f1f1;
+        }
+        #invoice {
+            padding: 20px;
+            border: 1px solid #000;
+            margin: 20px;
+        }
+
+        #invoice h1 {
+            text-align: center;
+            font-size: 24px;
+        }
+
+        #invoice p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        #invoice span {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .price-input {
+            width: 100px;
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .quantity-input {
+            width: 60px;
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .service-table td {
+            vertical-align: middle;
+        }
+
+        .error-message {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1001;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            max-width: 80%;
+            text-align: center;
+        }
+
+        .payment-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .payment-btn {
+            padding: 10px 20px;
+            background-color: #6ea0c2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .payment-btn:hover {
+            background-color: #4dbcd8;
+        }
+
+        .payment-btn.selected {
+            background-color: #2ecc71;
+        }
+
+        .payment-interface {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .payment-interface.active {
+            display: block;
+        }
+
+        .payment-interface input {
+            width: 150px;
+            margin-right: 10px;
+        }
+
+        .amount-display {
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .customer-details {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .customer-details div {
+                margin-bottom: 20px;
+            }
+
+            .form-group {
+                width: 100%;
+            }
+
+            #service-list, #price-range {
+                width: 100%;
+            }
+
+            .invoice-container {
+                width: 90%;
+            }
+
+            .payment-buttons {
+                flex-direction: column;
+                gap: 5px;
+                align-items: flex-end;
+            }
+
+            .payment-interface input {
+                width: 100%;
+            }
+        }
+
+        @media print {
+            body, html {
+                margin: 0;
+                padding: 0;
+            }
+
+            #save-btn, #print-btn, .remove-btn, .payment-buttons, .payment-interface {
+                display: none;
+            }
+
+            #invoice {
+                border: none;
+                padding: 20px;
+                margin: 0;
+                box-shadow: none;
+                font-size: 18px;
+                display: block !important;
+            }
+
+            #invoice h1 {
+                font-size: 28px;
+            }
+
+            @page {
+                size: A4;
+                margin: 10mm;
+            }
+
+            .invoice-container {
+                padding: 0;
+                width: 100%;
+                max-width: 100%;
+                box-shadow: none;
+            }
+
+            .form-group, button:not(#print-btn), .service-table, .item-table {
+                display: none !important;
+            }
+
+            footer {
+                display: none;
+            }
+
+            /* Add these new rules to hide Paid Amount and Balance during print */
+        #invoice p:has(#paid-amount-display),
+        #invoice p:has(#balance-display) {
+            display: none;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <header>
+            <img src="logo.png" alt="SINHE Auto Zone Logo" id="navbar-logo1">
+            <img src="invoice.png" alt="SINHE Auto Zone Logo" id="navbar-logo">
+        </header>
+
+        <!-- Error message container -->
+        <div id="errorMessage" style="display: none; background-color: red; color: white; padding: 10px; text-align: center;">
+            Low Stock Items: <span id="lowStockItems"></span>
+        </div>
+
+        <div id="invoice" style="display: none;">
+            <h1>SINHE Auto Zone Invoice</h1>
+            <p>Date: <span id="invoice-date-display"></span></p>
+            <p>Customer Name: <span id="customer-name-display"></span></p>
+            <p>Vehicle No: <span id="vehicle-no-display"></span></p>
+            <p>Mobile No: <span id="mobile-no-display"></span></p>
+            <p>Payment Method: <span id="payment-method-display"></span></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="invoice-items"></tbody>
+            </table>
+            <p>Total Amount: <span id="total-amount-display"></span></p>
+            <p>Paid Amount: <span id="paid-amount-display"></span></p>
+            <p>Balance: <span id="balance-display"></span></p>
+        </div>
+
+        <section class="customer-details">
+            <div>
+                <div class="form-group">
+                    <label for="invoice-date">Date & Time:</label>
+                    <input type="text" id="invoice-date" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="vehicle_no">Vehicle No:</label>
+                    <input type="text" id="vehicle_no" placeholder="Enter vehicle number" />
+                    <ul id="suggestion-list"></ul>
+                </div>
+                <div class="form-group">
+                    <label for="customer_name">Customer Name:</label>
+                    <input type="text" id="customer_name" placeholder="Enter customer name" />
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Mobile:</label>
+                    <input type="text" id="mobile" placeholder="Enter mobile number" />
+                    <ul id="mobile-suggestion-list"></ul>
+                </div>
+                <button onclick="saveCustomer()">Save Customer</button>
+            </div>
+        </section>
+
+        <section>
+            <div class="form-group">
+                <label for="service-list">Select Service:</label>
+                <select id="service-list">
+                    <option value="">Loading services...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="price-range">Select Price Range:</label>
+                <select id="price-range">
+                    <option value="">Select Price Range</option>
+                    <option value="price_small">Small</option>
+                    <option value="price_medium">Medium</option>
+                    <option value="price_large">Large</option>
+                    <option value="price_mini_car">Mini Car</option>
+                    <option value="price_car">Car</option>
+                    <option value="price_mini_van">Mini Van</option>
+                    <option value="price_cab">Cab</option>
+                    <option value="price_van">Van</option>
+                    <option value="price_jeep">Jeep</option>
+                    <option value="price_hiroof">Hiroof Large Van</option>
+                    <option value="price_mini_lorry_h">Mini Lorry (Batta) with Hood</option>
+                    <option value="price_mini_lorry">Mini Lorry (Batta) without Hood</option>
+                    <option value="price_lorry_h">Lorry with Hood</option>
+                    <option value="price_lorry">Lorry without Hood</option>
+                    <option value="price_bus">Rosa Bus</option>
+                </select>
+            </div>
+        </section>
+
+        <section>
+            <table class="service-table">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Price (Per Service)</th>
+                        <th>Quantity</th>
+                        <th>Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="service-list-table"></tbody>
+            </table>
+            <br><br>
+            <section>
+                <div class="form-group">
+                    <label for="item-list">Select Item:</label>
+                    <select id="item-list">
+                        <option value="">Loading items...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="made-list">Select Made by:</label>
+                    <select id="made-list" disabled>
+                        <option value="">Select Made by</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="type-list">Select Type:</label>
+                    <select id="type-list" disabled>
+                        <option value="">Select Type</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="model-list">Select Model:</label>
+                    <select id="model-list" disabled>
+                        <option value="">Select Model</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="price-list">Select Price:</label>
+                    <select id="price-list" disabled>
+                        <option value="">Select Price</option>
+                    </select>
+                </div>
+                <button id="add-item-btn" disabled>Add Item to Invoice</button>
+            </section>
+            <br>
+            <table class="item-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Made by</th>
+                        <th>Type</th>
+                        <th>Model</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="item-list-table"></tbody>
+            </table>
+            <footer>
+                <p>Total Payable: <span id="total-amount" class="total-amount">Rs. 0</span></p>
+                <div class="payment-buttons">
+                    <button class="payment-btn" data-method="cash">Cash</button>
+                    <button class="payment-btn" data-method="credit_card">Credit Card</button>
+                    <button class="payment-btn" data-method="bank_transfer">Bank Transfer</button>
+                
+                </div>
+                <div id="cash-interface" class="payment-interface">
+                    <label>Paid Amount:</label>
+                    <input type="number" id="cash-paid" min="0" step="0.01" placeholder="Enter amount">
+                </div>
+                <div id="credit-card-interface" class="payment-interface">
+                
+                   
+                    <label>Paid Amount:</label>
+                    <input type="number" id="credit-card-paid" min="0" step="0.01" placeholder="Enter amount">
+                </div>
+                <div id="bank-transfer-interface" class="payment-interface">
+                    
+                    <label>Paid Amount:</label>
+                    <input type="number" id="bank-transfer-paid" min="0" step="0.01" placeholder="Enter amount">
+                </div>
+                
+                <input type="hidden" id="payment-method" value="">
+                <div class="amount-display">
+                    <p>Paid Amount: <span id="paid-amount">Rs. 0</span></p>
+                    <p>Balance: <span id="balance">Rs. 0</span></p>
+                </div>
+                <br>
+                <button type="button" id="save-btn">Save Invoice</button>
+                <br><br>
+                <button type="button" id="print-btn">Print Invoice</button>
+            </footer>
+        </section>
+    </div>
+
+    <script>
+        let serviceData = [];
+        let inventoryData = [];
+        let debounceTimer;
+        let selectedPaymentMethod = '';
+        let paidAmount = 0;
+
+        document.getElementById('invoice-date').value = new Date().toLocaleString();
+
+        async function fetchServicesAndPrices() {
+            try {
+                const response = await fetch('fetch_services.php');
+                const data = await response.json();
+                serviceData = data.services || [];
+                loadServices(serviceData);
+            } catch (error) {
+                console.error('Error fetching services:', error);
+            }
+        }
+
+        async function fetchInventory() {
+            try {
+                const response = await fetch('fetch_inventory.php');
+                const data = await response.json();
+                inventoryData = data.inventory || [];
+                loadItemFilter(inventoryData);
+            } catch (error) {
+                console.error('Error fetching inventory:', error);
+            }
+        }
+
+        function loadServices(services) {
+            const serviceList = document.getElementById('service-list');
+            serviceList.innerHTML = services.length ? '' : '<option>No services available</option>';
+            services.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service.id;
+                option.textContent = service.name;
+                serviceList.appendChild(option);
+            });
+        }
+
+        function loadItemFilter(inventory) {
+            const itemList = document.getElementById('item-list');
+            itemList.innerHTML = '<option value="">Select Item</option>';
+            const uniqueItems = [...new Set(inventory.map(item => item.item_name))];
+            uniqueItems.forEach(itemName => {
+                const option = document.createElement('option');
+                option.value = itemName;
+                option.textContent = itemName;
+                itemList.appendChild(option);
+            });
+        }
+
+        function resetDropdowns(from) {
+            const dropdowns = ['made-list', 'type-list', 'model-list', 'price-list'];
+            const startIndex = dropdowns.indexOf(from) + 1;
+            for (let i = startIndex; i < dropdowns.length; i++) {
+                const dropdown = document.getElementById(dropdowns[i]);
+                dropdown.innerHTML = '<option value="">Select ' + dropdowns[i].replace('-list', '').replace('made', 'Made By') + '</option>';
+                dropdown.disabled = true;
+            }
+            document.getElementById('add-item-btn').disabled = true;
+        }
+
+        function handleItemSelection() {
+            const selectedItem = document.getElementById('item-list').value;
+            const madeList = document.getElementById('made-list');
+            resetDropdowns('item-list');
+
+            if (!selectedItem) {
+                madeList.disabled = true;
+                return;
+            }
+
+            madeList.disabled = false;
+            madeList.innerHTML = '<option value="">Select Made By</option>';
+            const filteredInventory = inventoryData.filter(item => item.item_name === selectedItem);
+            const uniqueMade = [...new Set(filteredInventory.map(item => item.made_by))];
+            uniqueMade.forEach(made => {
+                const option = document.createElement('option');
+                option.value = made;
+                option.textContent = made;
+                madeList.appendChild(option);
+            });
+        }
+
+        function handleMadeSelection() {
+            const selectedItem = document.getElementById('item-list').value;
+            const selectedMade = document.getElementById('made-list').value;
+            const typeList = document.getElementById('type-list');
+            resetDropdowns('made-list');
+
+            if (!selectedMade) {
+                typeList.disabled = true;
+                return;
+            }
+
+            typeList.disabled = false;
+            typeList.innerHTML = '<option value="">Select Type</option>';
+            const filteredInventory = inventoryData.filter(item => 
+                item.item_name === selectedItem && item.made_by === selectedMade
+            );
+            const uniqueTypes = [...new Set(filteredInventory.map(item => item.type))];
+            uniqueTypes.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type;
+                typeList.appendChild(option);
+            });
+        }
+
+        function handleTypeSelection() {
+            const selectedItem = document.getElementById('item-list').value;
+            const selectedMade = document.getElementById('made-list').value;
+            const selectedType = document.getElementById('type-list').value;
+            const modelList = document.getElementById('model-list');
+            resetDropdowns('type-list');
+
+            if (!selectedType) {
+                modelList.disabled = true;
+                return;
+            }
+
+            modelList.disabled = false;
+            modelList.innerHTML = '<option value="">Select Model</option>';
+            const filteredInventory = inventoryData.filter(item => 
+                item.item_name === selectedItem && 
+                item.made_by === selectedMade && 
+                item.type === selectedType
+            );
+            const uniqueModels = [...new Set(filteredInventory.map(item => item.model))];
+            uniqueModels.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model;
+                option.textContent = model;
+                modelList.appendChild(option);
+            });
+        }
+
+        function handleModelSelection() {
+            const selectedItem = document.getElementById('item-list').value;
+            const selectedMade = document.getElementById('made-list').value;
+            const selectedType = document.getElementById('type-list').value;
+            const selectedModel = document.getElementById('model-list').value;
+            const priceList = document.getElementById('price-list');
+            resetDropdowns('model-list');
+
+            if (!selectedModel) {
+                priceList.disabled = true;
+                return;
+            }
+
+            priceList.disabled = false;
+            priceList.innerHTML = '<option value="">Select Price</option>';
+            const filteredInventory = inventoryData.filter(item => 
+                item.item_name === selectedItem && 
+                item.made_by === selectedMade && 
+                item.type === selectedType && 
+                item.model === selectedModel
+            );
+            filteredInventory.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.price;
+                option.textContent = `Rs. ${item.price}`;
+                priceList.appendChild(option);
+            });
+            document.getElementById('add-item-btn').disabled = false;
+        }
+
+        document.getElementById('item-list').addEventListener('change', handleItemSelection);
+        document.getElementById('made-list').addEventListener('change', handleMadeSelection);
+        document.getElementById('type-list').addEventListener('change', handleTypeSelection);
+        document.getElementById('model-list').addEventListener('change', handleModelSelection);
+
+        function addServiceToTable(selectedServiceId, selectedPriceRange) {
+            if (!selectedServiceId || !selectedPriceRange) return;
+            const service = serviceData.find(s => s.id == selectedServiceId);
+            if (!service || service[selectedPriceRange] === null || service[selectedPriceRange] === undefined) return;
+
+            const servicePrice = service[selectedPriceRange];
+            const serviceName = service.name;
+            const tableBody = document.getElementById('service-list-table');
+            const newRow = tableBody.insertRow();
+            newRow.innerHTML = `
+                <td>${serviceName}</td>
+                <td><input type="number" class="price-input" value="${servicePrice}" min="0" step="0.01"></td>
+                <td><input type="number" class="quantity-input" value="1" min="1"></td>
+                <td class="amount">Rs. ${servicePrice}</td>
+                <td><button class="remove-btn">Remove</button></td>
+            `;
+            const priceInput = newRow.querySelector('.price-input');
+            const quantityInput = newRow.querySelector('.quantity-input');
+            
+            priceInput.addEventListener('input', () => { updateServiceAmount(newRow); updateTotal(); });
+            quantityInput.addEventListener('input', () => { updateServiceAmount(newRow); updateTotal(); });
+            newRow.querySelector('.remove-btn').addEventListener('click', () => { newRow.remove(); updateTotal(); });
+            updateTotal();
+
+            document.getElementById('service-list').value = '';
+            document.getElementById('price-range').value = '';
+        }
+
+        document.getElementById('service-list').addEventListener('change', function () {
+            addServiceToTable(this.value, document.getElementById('price-range').value);
+        });
+
+        document.getElementById('price-range').addEventListener('change', function () {
+            addServiceToTable(document.getElementById('service-list').value, this.value);
+        });
+
+        document.getElementById('add-item-btn').addEventListener('click', function () {
+            const selectedItem = document.getElementById('item-list').value;
+            const selectedMade = document.getElementById('made-list').value;
+            const selectedType = document.getElementById('type-list').value;
+            const selectedModel = document.getElementById('model-list').value;
+            const selectedPrice = document.getElementById('price-list').value;
+            if (!selectedItem || !selectedMade || !selectedType || !selectedModel || !selectedPrice) {
+                alert('Please select all item details');
+                return;
+            }
+            const tableBody = document.getElementById('item-list-table');
+            const newRow = tableBody.insertRow();
+            newRow.innerHTML = `
+                <td>${selectedItem}</td>
+                <td>${selectedMade}</td>
+                <td>${selectedType}</td>
+                <td>${selectedModel}</td>
+                <td>Rs. ${selectedPrice}</td>
+                <td><input type="number" value="1" min="1"></td>
+                <td>Rs. ${selectedPrice}</td>
+                <td><button class="remove-btn">Remove</button></td>
+            `;
+            newRow.querySelector('input').addEventListener('input', () => { updateItemAmount(newRow, selectedPrice); updateTotal(); });
+            newRow.querySelector('.remove-btn').addEventListener('click', () => { newRow.remove(); updateTotal(); });
+            updateTotal();
+        });
+
+        function updateServiceAmount(row) {
+            const price = parseFloat(row.querySelector('.price-input').value) || 0;
+            const quantity = parseInt(row.querySelector('.quantity-input').value) || 1;
+            const amount = price * quantity;
+            row.querySelector('.amount').textContent = `Rs. ${amount.toFixed(2)}`;
+        }
+
+        function updateItemAmount(row, price) {
+            const quantity = row.cells[5].querySelector('input').value;
+            row.cells[6].textContent = `Rs. ${(price * quantity).toFixed(2)}`;
+        }
+
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll('.service-table tbody tr').forEach(row => {
+                const price = parseFloat(row.querySelector('.price-input').value) || 0;
+                const quantity = parseInt(row.querySelector('.quantity-input').value) || 1;
+                total += price * quantity;
+            });
+            document.querySelectorAll('.item-table tbody tr').forEach(row => {
+                const price = parseFloat(row.cells[4].textContent.replace('Rs. ', ''));
+                const quantity = parseInt(row.cells[5].querySelector('input').value);
+                total += price * quantity;
+            });
+            document.getElementById('total-amount').textContent = `Rs. ${total.toFixed(2)}`;
+            updateBalance(); // Update balance whenever total changes
+        }
+
+        function updateBalance() {
+            const totalAmount = parseFloat(document.getElementById('total-amount').textContent.replace('Rs. ', '')) || 0;
+            const balance = totalAmount - paidAmount;
+            document.getElementById('paid-amount').textContent = `Rs. ${paidAmount.toFixed(2)}`;
+            document.getElementById('balance').textContent = `Rs. ${balance.toFixed(2)}`;
+        }
+
+        document.getElementById('vehicle_no').addEventListener('input', function () {
+            const term = this.value.trim();
+            if (term.length < 1) {
+                document.getElementById('suggestion-list').style.display = 'none';
+                return;
+            }
+
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+                try {
+                    const response = await fetch(`fetch_vehicle_numbers.php?term=${encodeURIComponent(term)}`);
+                    if (!response.ok) throw new Error('Failed to fetch vehicle numbers');
+                    const vehicleNumbers = await response.json();
+                    if (vehicleNumbers.error) {
+                        console.error(vehicleNumbers.error);
+                        document.getElementById('suggestion-list').style.display = 'none';
+                        return;
+                    }
+                    showVehicleSuggestions(vehicleNumbers);
+                } catch (error) {
+                    console.error('Error fetching vehicle numbers:', error);
+                    document.getElementById('suggestion-list').style.display = 'none';
+                }
+            }, 300);
+        });
+
+        function showVehicleSuggestions(vehicleNumbers) {
+            const suggestionList = document.getElementById('suggestion-list');
+            suggestionList.innerHTML = '';
+            if (vehicleNumbers.length > 0) {
+                suggestionList.style.display = 'block';
+                vehicleNumbers.forEach(vehicleNo => {
+                    const li = document.createElement('li');
+                    li.textContent = vehicleNo;
+                    li.addEventListener('click', async () => {
+                        document.getElementById('vehicle_no').value = vehicleNo;
+                        suggestionList.style.display = 'none';
+                        await fetchCustomerDetails(vehicleNo);
+                    });
+                    suggestionList.appendChild(li);
+                });
+            } else {
+                suggestionList.style.display = 'none';
+            }
+        }
+
+        async function fetchCustomerDetails(vehicleNo) {
+            if (!vehicleNo) return;
+            try {
+                const response = await fetch(`fetch_customers.php?vehicle_no=${encodeURIComponent(vehicleNo)}`);
+                if (!response.ok) throw new Error('Failed to fetch customer details');
+                const data = await response.json();
+                if (data.error) {
+                    console.error(data.error);
+                    document.getElementById('customer_name').value = '';
+                    document.getElementById('mobile').value = '';
+                    return;
+                }
+                document.getElementById('customer_name').value = data.customer_name || '';
+                document.getElementById('mobile').value = data.mobile || '';
+            } catch (error) {
+                console.error('Error fetching customer details:', error);
+                document.getElementById('customer_name').value = '';
+                document.getElementById('mobile').value = '';
+            }
+        }
+
+        document.getElementById('vehicle_no').addEventListener('change', function () {
+            fetchCustomerDetails(this.value.trim());
+        });
+
+        document.getElementById('customer_name').addEventListener('input', function () {
+            const vehicleNo = document.getElementById('vehicle_no').value.trim();
+            const customerName = this.value.trim();
+            if (!vehicleNo || customerName.length < 1) {
+                document.getElementById('mobile-suggestion-list').style.display = 'none';
+                return;
+            }
+
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+                try {
+                    const response = await fetch(`fetch_mobile_numbers.php?vehicle_no=${encodeURIComponent(vehicleNo)}&customer_name=${encodeURIComponent(customerName)}`);
+                    if (!response.ok) throw new Error('Failed to fetch mobile numbers');
+                    const mobileNumbers = await response.json();
+                    if (mobileNumbers.error) {
+                        console.error(mobileNumbers.error);
+                        document.getElementById('mobile-suggestion-list').style.display = 'none';
+                        return;
+                    }
+                    showMobileSuggestions(mobileNumbers);
+                } catch (error) {
+                    console.error('Error fetching mobile numbers:', error);
+                    document.getElementById('mobile-suggestion-list').style.display = 'none';
+                }
+            }, 300);
+        });
+
+        function showMobileSuggestions(mobileNumbers) {
+            const suggestionList = document.getElementById('mobile-suggestion-list');
+            suggestionList.innerHTML = '';
+            if (mobileNumbers.length > 0) {
+                suggestionList.style.display = 'block';
+                mobileNumbers.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item.mobile_no;
+                    li.addEventListener('click', () => {
+                        document.getElementById('mobile').value = item.mobile_no;
+                        suggestionList.style.display = 'none';
+                    });
+                    suggestionList.appendChild(li);
+                });
+            } else {
+                suggestionList.style.display = 'none';
+            }
+        }
+
+        async function saveCustomer() {
+            const vehicleNo = document.getElementById('vehicle_no').value.trim();
+            const customerName = document.getElementById('customer_name').value.trim();
+            const mobile = document.getElementById('mobile').value.trim();
+            if (!vehicleNo || !customerName || !mobile) {
+                alert("All fields must be filled.");
+                return;
+            }
+            try {
+                const response = await fetch('save_customer.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ vehicle_no: vehicleNo, customer_name: customerName, mobile })
+                });
+                if (!response.ok) throw new Error('Failed to save customer');
+                const result = await response.json();
+                alert(result.success ? "Customer details saved successfully!" : "Failed to save customer details: " + (result.message || 'Unknown error'));
+            } catch (error) {
+                console.error('Error saving customer:', error);
+                alert('Failed to save customer.');
+            }
+        }
+
+
+        // Payment method button handling
+        document.querySelectorAll('.payment-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                document.querySelectorAll('.payment-btn').forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedPaymentMethod = this.getAttribute('data-method');
+                document.getElementById('payment-method').value = selectedPaymentMethod;
+
+                // Hide all payment interfaces and show the selected one
+                document.querySelectorAll('.payment-interface').forEach(interface => interface.classList.remove('active'));
+                const interfaceId = `${selectedPaymentMethod.replace('_', '-')}-interface`;
+                document.getElementById(interfaceId).classList.add('active');
+            });
+        });
+
+        // Handle paid amount inputs
+        document.querySelectorAll('.payment-interface input[type="number"]').forEach(input => {
+            input.addEventListener('input', function () {
+                paidAmount = parseFloat(this.value) || 0;
+                updateBalance();
+            });
+        });
+
+        document.getElementById('save-btn').addEventListener('click', async function () {
+            try {
+                const invoiceDate = document.getElementById('invoice-date').value;
+                const customerName = document.getElementById('customer_name').value.trim();
+                const vehicleNo = document.getElementById('vehicle_no').value.trim();
+                const mobileNo = document.getElementById('mobile').value.trim();
+                const paymentMethod = selectedPaymentMethod;
+                const totalAmount = parseFloat(document.getElementById('total-amount').textContent.replace(/Rs\.|\s/g, ''));
+                const paidAmountValue = paidAmount;
+
+                if (!customerName || !vehicleNo || !mobileNo || !paymentMethod || isNaN(totalAmount) || totalAmount <= 0) {
+                    alert('Please fill out all fields, select a payment method, and add items/services.');
+                    return;
+                }
+
+                const items = [];
+                document.querySelectorAll('.service-table tbody tr').forEach(row => {
+                    items.push({
+                        type: 'service',
+                        name: row.cells[0].textContent,
+                        price: parseFloat(row.querySelector('.price-input').value),
+                        quantity: parseInt(row.querySelector('.quantity-input').value),
+                        total: parseFloat(row.querySelector('.amount').textContent.replace('Rs. ', ''))
+                    });
+                });
+                document.querySelectorAll('.item-table tbody tr').forEach(row => {
+                    items.push({
+                        type: 'item',
+                        name: row.cells[0].textContent,
+                        made: row.cells[1].textContent,
+                        type_detail: row.cells[2].textContent,
+                        model: row.cells[3].textContent,
+                        price: parseFloat(row.cells[4].textContent.replace('Rs. ', '')),
+                        quantity: parseInt(row.cells[5].querySelector('input').value),
+                        total: parseFloat(row.cells[6].textContent.replace('Rs. ', ''))
+                    });
+                });
+
+                if (items.length === 0) {
+                    alert('Please add at least one service or item.');
+                    return;
+                }
+
+                const invoiceData = {
+                    invoice_date: invoiceDate,
+                    customer_name: customerName,
+                    vehicle_no: vehicleNo,
+                    mobile_no: mobileNo,
+                    payment_method: paymentMethod,
+                    total_amount: totalAmount,
+                    paid_amount: paidAmountValue,
+                    items: items
+                };
+
+                const response = await fetch('save_invoice.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(invoiceData)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Invoice saved successfully!');
+                    window.open(`generate_invoice.php?invoice_id=${result.invoice_id}`, '_blank');
+                } else {
+                    alert('Error saving invoice: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error saving invoice:', error);
+                alert('Failed to save invoice: ' + error.message);
+            }
+        });
+
+        document.getElementById('print-btn').addEventListener('click', function () {
+            const invoiceDate = document.getElementById('invoice-date').value;
+            const customerName = document.getElementById('customer_name').value.trim();
+            const vehicleNo = document.getElementById('vehicle_no').value.trim();
+            const mobileNo = document.getElementById('mobile').value.trim();
+            const paymentMethod = selectedPaymentMethod;
+            const totalAmount = document.getElementById('total-amount').textContent;
+            const paidAmountValue = document.getElementById('paid-amount').textContent;
+            const balanceValue = document.getElementById('balance').textContent;
+
+            if (!customerName || !vehicleNo || !mobileNo || !paymentMethod || totalAmount === "Rs. 0") {
+                alert("Please fill out all fields, select a payment method, and add items/services.");
+                return;
+            }
+
+            document.getElementById('invoice-date-display').textContent = invoiceDate;
+            document.getElementById('customer-name-display').textContent = customerName;
+            document.getElementById('vehicle-no-display').textContent = vehicleNo;
+            document.getElementById('mobile-no-display').textContent = mobileNo;
+            document.getElementById('payment-method-display').textContent = paymentMethod.replace('_', ' ').toUpperCase();
+            document.getElementById('total-amount-display').textContent = totalAmount;
+            document.getElementById('paid-amount-display').textContent = paidAmountValue;
+            document.getElementById('balance-display').textContent = balanceValue;
+
+            const invoiceItems = document.getElementById('invoice-items');
+            invoiceItems.innerHTML = '';
+
+            document.querySelectorAll('.service-table tbody tr').forEach(row => {
+                const price = parseFloat(row.querySelector('.price-input').value);
+                const quantity = parseInt(row.querySelector('.quantity-input').value);
+                const newRow = invoiceItems.insertRow();
+                newRow.innerHTML = `
+                    <td>Service</td>
+                    <td>${row.cells[0].textContent}</td>
+                    <td>Rs. ${price.toFixed(2)}</td>
+                    <td>${quantity}</td>
+                    <td>${row.querySelector('.amount').textContent}</td>
+                `;
+            });
+
+            document.querySelectorAll('.item-table tbody tr').forEach(row => {
+                const newRow = invoiceItems.insertRow();
+                newRow.innerHTML = `
+                    <td>Item</td>
+                    <td>${row.cells[0].textContent} (${row.cells[1].textContent} - ${row.cells[2].textContent} - ${row.cells[3].textContent})</td>
+                    <td>${row.cells[4].textContent}</td>
+                    <td>${row.cells[5].querySelector('input').value}</td>
+                    <td>${row.cells[6].textContent}</td>
+                `;
+            });
+
+            document.getElementById('invoice').style.display = 'block';
+            window.print();
+            setTimeout(() => {
+                document.getElementById('invoice').style.display = 'none';
+            }, 1000);
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("lowStockWarning.php")
+                .then(response => response.json())
+                .then(lowStockItems => {
+                    if (Array.isArray(lowStockItems) && lowStockItems.length > 0) {
+                        const lowStockItemsSpan = document.getElementById('lowStockItems');
+                        const errorMessage = document.getElementById('errorMessage');
+                        let stockList = lowStockItems.map(item => `${item.name} (${item.stock})`).join(', ');
+                        lowStockItemsSpan.textContent = stockList;
+                        errorMessage.style.display = 'block';
+                    }
+                })
+                .catch(error => console.error("Error fetching stock data:", error));
+
+            document.getElementById('errorMessage').addEventListener('click', function () {
+                this.style.display = 'none';
+            });
+
+            setInterval(() => {
+                fetch("lowStockWarning.php")
+                    .then(response => response.json())
+                    .then(lowStockItems => {
+                        const errorMessage = document.getElementById('errorMessage');
+                        if (lowStockItems.length > 0) {
+                            document.getElementById('lowStockItems').textContent =
+                                lowStockItems.map(item => `${item.name} (${item.stock})`).join(', ');
+                            errorMessage.style.display = 'block';
+                        } else {
+                            errorMessage.style.display = 'none';
+                        }
+                    });
+            }, 10000);
+        });
+
+
+        // Function to mask sensitive numbers
+        function maskNumber(number, type) {
+            if (!number) return 'N/A';
+            if (type === 'card') {
+                return '****-****-****-' + number.slice(-4);
+            } else if (type === 'account') {
+                return '****' + number.slice(-4);
+            }
+            return number; // For transaction ID or others
+        }
+
+        // Function to fetch invoice data from the server
+        async function fetchInvoiceData(invoiceId) {
+            try {
+                const response = await fetch(`fetch_invoice.php?invoice_id=${invoiceId}`);
+                if (!response.ok) throw new Error('Failed to fetch invoice data');
+                const data = await response.json();
+                if (!data.success) throw new Error(data.message);
+                return data;
+            } catch (error) {
+                console.error('Error fetching invoice:', error);
+                showError(error.message);
+                return null;
+            }
+        }
+
+        // Function to show error message
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000); // Hide after 5 seconds
+        }
+
+        // Function to populate the invoice
+        async function populateInvoice() {
+            const params = new URLSearchParams(window.location.search);
+            const invoiceId = params.get('invoice_id');
+
+            if (!invoiceId || isNaN(invoiceId)) {
+                showError('Invalid invoice ID');
+                document.getElementById('invoice').innerHTML = '<p>Invalid invoice ID</p>';
+                return;
+            }
+
+            const data = await fetchInvoiceData(invoiceId);
+            if (!data) {
+                document.getElementById('invoice').innerHTML = '<p>Error loading invoice</p>';
+                return;
+            }
+
+           // Function to mask sensitive numbers
+        function maskNumber(number, type) {
+            if (!number) return 'N/A';
+            if (type === 'card') {
+                return '****-****-****-' + number.slice(-4);
+            } else if (type === 'account') {
+                return '****' + number.slice(-4);
+            }
+            return number; // For transaction ID or others
+        }
+    }
+        // Function to fetch invoice data from the server
+        async function fetchInvoiceData(invoiceId) {
+            try {
+                const response = await fetch(`fetch_invoice.php?invoice_id=${invoiceId}`);
+                if (!response.ok) throw new Error('Failed to fetch invoice data');
+                const data = await response.json();
+                if (!data.success) throw new Error(data.message);
+                return data;
+            } catch (error) {
+                console.error('Error fetching invoice:', error);
+                showError(error.message);
+                return null;
+            }
+        }
+
+        // Function to show error message
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000); // Hide after 5 seconds
+        }
+
+        // Function to populate the invoice
+        async function populateInvoice() {
+            const params = new URLSearchParams(window.location.search);
+            const invoiceId = params.get('invoice_id');
+
+            if (!invoiceId || isNaN(invoiceId)) {
+                showError('Invalid invoice ID');
+                document.getElementById('invoice').innerHTML = '<p>Invalid invoice ID</p>';
+                return;
+            }
+
+            const data = await fetchInvoiceData(invoiceId);
+            if (!data) {
+                document.getElementById('invoice').innerHTML = '<p>Error loading invoice</p>';
+                return;
+            }
+
+            const invoice = data.invoice;
+            const items = data.items;
+
+            // Populate invoice details
+            document.getElementById('invoice-date-display').textContent = invoice.date;
+            document.getElementById('customer-name-display').textContent = invoice.customer_name;
+            document.getElementById('vehicle-no-display').textContent = invoice.vehicle_no;
+            document.getElementById('mobile-no-display').textContent = invoice.mobile_no;
+            document.getElementById('payment-method-display').textContent = invoice.payment_method.replace('_', ' ').toUpperCase();
+
+            // Populate payment details
+            const paymentDetailDisplay = document.getElementById('payment-detail-display');
+            switch (invoice.payment_method) {
+                case 'credit_card':
+                    paymentDetailDisplay.textContent = `Card Number: ${maskNumber(invoice.card_number, 'card')}`;
+                    break;
+                case 'bank_transfer':
+                    paymentDetailDisplay.textContent = `Account Number: ${maskNumber(invoice.account_number, 'account')}`;
+                    break;
+                case 'online_payment':
+                    paymentDetailDisplay.textContent = `Transaction ID: ${invoice.transaction_id || 'N/A'}`;
+                    break;
+                case 'cash':
+                default:
+                    paymentDetailDisplay.textContent = 'No additional details required for Cash payment.';
+                    break;
+            }
+
+            // Populate items table
+            const invoiceItems = document.getElementById('invoice-items');
+            invoiceItems.innerHTML = '';
+            items.forEach(item => {
+                const row = document.createElement('tr');
+                if (item.type === 'service') {
+                    row.innerHTML = `
+                        <td>Service</td>
+                        <td>${item.name}</td>
+                        <td>Rs. ${parseFloat(item.price).toFixed(2)}</td>
+                        <td>${item.quantity}</td>
+                        <td>Rs. ${parseFloat(item.total).toFixed(2)}</td>
+                    `;
+                } else if (item.type === 'item') {
+                    row.innerHTML = `
+                        <td>Item</td>
+                        <td>${item.name} (${item.made} - ${item.type_detail} - ${item.model})</td>
+                        <td>Rs. ${parseFloat(item.price).toFixed(2)}</td>
+                        <td>${item.quantity}</td>
+                        <td>Rs. ${parseFloat(item.total).toFixed(2)}</td>
+                    `;
+                }
+                invoiceItems.appendChild(row);
+            });
+
+            // Populate totals
+            document.getElementById('total-amount-display').textContent = `Rs. ${invoice.total_amount.toFixed(2)}`;
+            document.getElementById('paid-amount-display').textContent = `Rs. ${invoice.paid_amount.toFixed(2)}`;
+            const balance = invoice.total_amount - invoice.paid_amount;
+            document.getElementById('balance-display').textContent = `Rs. ${balance.toFixed(2)}`;
+        }
+
+        // Load invoice data when the page loads
+        document.addEventListener('DOMContentLoaded', populateInvoice);
+        
+        fetchServicesAndPrices();
+        fetchInventory();
+    </script>
+</body>
+</html>

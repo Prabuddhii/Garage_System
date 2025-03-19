@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garage POS System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('garage-background.jpg') no-repeat center center/cover;
+            color: #fff;
+        }
+
+        #dashboard-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .navbar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        #navbar-logo {
+           width: 80px; 
+           height: auto;
+           margin-right: 10px; 
+        }
+
+        .navbar h1 {
+            font-size: 1.8rem;
+            color: #f39c12;
+            margin: 0;
+
+        }
+
+        .navbar button, .navbar a {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            background: #e74c3c;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .navbar button:hover, .navbar a:hover {
+            background: #c0392b;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 30px;
+        }
+
+        .dashboard-card {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .dashboard-card h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+            color: #f39c12;
+        }
+
+        .dashboard-card p {
+            font-size: 1rem;
+            color: #ddd;
+        }
+
+        footer {
+            margin-top: 30px;
+            padding: 15px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            width: 100%;
+            color: #ddd;
+        }
+
+        .dashboard-card-link {
+            display: block;
+            height: 100%;
+            width: 100%;
+            text-decoration: none; /* Removes the underline */
+        }
+
+        .error-message {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #e74c3c;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    display: none;
+    z-index: 1001;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    max-width: 80%;
+    text-align: center;
+}
+        
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Dashboard Page -->
+        <section id="dashboard-page" class="page active">
+            <div class="navbar">
+                <img src="logo.png" alt="SINHE Auto Zone Logo" id="navbar-logo">
+                <h1>Dashboard</h1>
+                <a href="login.html">Logout</a>
+            </div>
+            
+            <!-- Error message container -->
+        <div id="errorMessage" class="error-message">
+            <p>Low stock warning: <span id="lowStockItems"></span></p>
+        </div>
+
+        <div id="errorMessage" class="error-message">
+            <p>Low stock warning: <span id="lowStockItems"></span></p>
+        </div>
+
+            <div class="dashboard-container">
+                <!-- Inventory Management Card -->
+                <div class="dashboard-card">
+                    <a href="inventorymanagement.php" class="dashboard-card-link">
+                        <h2>Inventory Management</h2>
+                        <p>View and update stock levels for all garage items.</p>
+                    </a>
+                </div>
+
+                <!-- Services Card -->
+                <div class="dashboard-card">
+                    <a href="Services.php" class="dashboard-card-link">
+                    <h2>Services</h2>
+                    <p>View and update all garage services.</p>
+                    </a>
+                </div>
+
+                <!-- Sales Records Card -->
+                <div class="dashboard-card">
+                    <a href="salsesrecord.php" class="dashboard-card-link">
+                    <h2>Invoice</h2>
+                    <p>Generate detailed sales reports.</p>
+                    </a>
+                </div>
+
+                <!-- Sales Record Card -->
+                <div class="dashboard-card">
+                    <a href="sales_filter.html" class="dashboard-card-link">
+                    <h2>Sales Record</h2>
+                    <p>Track all transactions.</p>
+                    </a>
+                </div>
+
+                <!-- Customer Management Card -->
+                <div class="dashboard-card">
+                    <a href="customers.php" class="dashboard-card-link">
+                    <h2>Customer Management</h2>
+                    <p>Manage customer details and service history.</p>
+                    </a>
+                </div>
+
+                <!-- Employee Management Card -->
+                <div class="dashboard-card">
+                    <a href="employee.php" class="dashboard-card-link">
+                    <h2>Employee Management</h2>
+                    <p>Monitor employee performance and manage shifts.</p>
+                    </a>
+                </div>
+
+                
+            </div>
+
+            <footer>
+                 <p>&copy; SINHE Auto Zone. All rights reserved.</p>
+            </footer>
+        </section>
+    </div>
+</body>
+</html>

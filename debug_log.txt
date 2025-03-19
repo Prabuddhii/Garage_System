@@ -1,0 +1,14 @@
+Array
+(
+    [invoice_date] => 1/20/2025, 11:21:13 AM
+    [customer_name] => Nishan
+    [vehicle_no] => CAC 2465
+    [total_amount] => 1500.00
+)
+Array
+(
+    [invoice_date] => 1/20/2025, 11:23:28 AM
+    [customer_name] => Nishan
+    [vehicle_no] => CAC 2465
+    [total_amount] => 1500.00
+)

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garage POS System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('garage-background.jpg') no-repeat center center/cover;
+            color: #fff;
+        }
+
+        .page {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #ddd;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background: #f39c12;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #d35400;
+        }
+
+        a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Register Page -->
+        <section id="register-page" class="page">
+            <h1>Create an Account</h1>
+            <p>Register to start managing SINHE Auto Zone</p>
+            <form id="register-form" method="POST" action="reg.php">
+                <label for="register-username">Username</label>
+                <input type="text" name="name" id="name" placeholder="Enter a username" required>
+
+                <label for="register-email">Email</label>
+                <input type="email" name="email" id="email" placeholder="Enter an email" required>
+
+                <label for="register-password">Password</label>
+                <input type="password" name="password" id="password" placeholder="Create a password" required>
+
+                <label for="register-confirm-password">Confirm Password</label>
+                <input type="password" name="cpassword" id="cpassword" placeholder="Confirm your password" required>
+
+                <button type="submit" name="submit">Register</button>
+            </form>
+
+            <p>Already have an account? <a href="login.html" id="go-to-login">Login here</a></p>
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garage POS System - Filtered Sales Records</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('garage-inventory-bg.jpg') no-repeat center center/cover;
+            color: #fff;
+        }
+
+        .navbar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        #navbar-logo {
+            width: 80px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .navbar h1 {
+            font-size: 1.8rem;
+            color: #f39c12;
+            margin: 0;
+        }
+
+        .navbar a {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            background: #e74c3c;
+            color: #fff;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: #c0392b;
+        }
+
+        #app {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: #f39c12;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-options select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            background: #fff;
+            color: #333;
+        }
+
+        .services-table {
+            width: 100%;
+            max-width: 1200px;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .services-table thead {
+            background: #f39c12;
+            color: #fff;
+        }
+
+        .services-table th, .services-table td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .services-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .services-table tr:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        footer {
+            margin-top: 30px;
+            padding: 15px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            width: 100%;
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="navbar">
+            <img src="logo.png" alt="SINHE Auto Zone Logo" id="navbar-logo">
+            <h1>Sales Records</h1>
+            <a href="dashboard.html">Back to Menu</a>
+        </div>
+
+        <section id="services-section">
+            <div class="section-header">
+                <h2>Sales Records</h2>
+                <div class="filter-options">
+                    <select id="filter-type">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+                    <select id="filter-value">
+                        <!-- Options will be populated via JavaScript -->
+                    </select>
+                </div>
+            </div>
+
+            <table class="services-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="sales-table-body">
+                    <!-- Data will be populated dynamically -->
+                </tbody>
+            </table>
+        </section>
+
+        <footer>
+            <p>© SINHE Auto Zone. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Database connection details could be moved to a separate PHP file for security
+        const fetchSalesData = async (filterType, filterValue) => {
+            try {
+                const response = await fetch('fetch_sales.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `filter_type=${encodeURIComponent(filterType)}&filter_value=${encodeURIComponent(filterValue)}`,
+                });
+                const data = await response.json();
+                populateTable(data);
+            } catch (error) {
+                console.error('Error fetching sales data:', error);
+            }
+        };
+
+        const populateTable = (data) => {
+            const tbody = document.getElementById('sales-table-body');
+            tbody.innerHTML = '';
+            if (data.length > 0) {
+                data.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row.date}</td>
+                        <td>${row.customer_name}</td>
+                        <td>Rs. ${parseFloat(row.total_amount).toFixed(2)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="3">No records found.</td></tr>';
+            }
+        };
+
+        const populateFilterOptions = () => {
+            const filterType = document.getElementById('filter-type').value;
+            const filterValueSelect = document.getElementById('filter-value');
+            filterValueSelect.innerHTML = '';
+
+            const today = new Date();
+            if (filterType === 'daily') {
+                for (let i = 0; i < 30; i++) {
+                    const date = new Date(today);
+                    date.setDate(today.getDate() - i);
+                    const option = document.createElement('option');
+                    option.value = date.toISOString().split('T')[0];
+                    option.text = date.toDateString();
+                    filterValueSelect.appendChild(option);
+                }
+            } else if (filterType === 'weekly') {
+                for (let i = 0; i < 12; i++) {
+                    const startOfWeek = new Date(today);
+                    startOfWeek.setDate(today.getDate() - today.getDay() - i * 7);
+                    const option = document.createElement('option');
+                    option.value = startOfWeek.toISOString().split('T')[0];
+                    option.text = `Week of ${startOfWeek.toDateString()}`;
+                    filterValueSelect.appendChild(option);
+                }
+            } else if (filterType === 'monthly') {
+                for (let i = 0; i < 12; i++) {
+                    const month = new Date(today.getFullYear(), today.getMonth() - i, 1);
+                    const option = document.createElement('option');
+                    option.value = `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, '0')}`;
+                    option.text = month.toLocaleString('default', { month: 'long', year: 'numeric' });
+                    filterValueSelect.appendChild(option);
+                }
+            } else if (filterType === 'yearly') {
+                for (let i = 0; i < 5; i++) {
+                    const year = today.getFullYear() - i;
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.text = year;
+                    filterValueSelect.appendChild(option);
+                }
+            }
+
+            // Fetch data for the default selected option
+            fetchSalesData(filterType, filterValueSelect.value);
+        };
+
+        // Event listeners
+        document.getElementById('filter-type').addEventListener('change', populateFilterOptions);
+        document.getElementById('filter-value').addEventListener('change', () => {
+            const filterType = document.getElementById('filter-type').value;
+            const filterValue = document.getElementById('filter-value').value;
+            fetchSalesData(filterType, filterValue);
+        });
+
+        // Initial load
+        populateFilterOptions();
+    </script>
+</body>
+</html>

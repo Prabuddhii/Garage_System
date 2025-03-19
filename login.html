@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garage POS System - Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('garage-background.jpg') no-repeat center center/cover;
+            color: #fff;
+        }
+
+        #login-page {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #ddd;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background: #f39c12;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #d35400;
+        }
+
+        a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #fff;
+        }
+
+        #logo {
+    width: 100px; 
+    height: auto;
+    margin: 0px 0; 
+}
+
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Login Page -->
+        <section id="login-page" class="page active">
+            <h1>Welcome</h1>
+            <img src="logo.png" alt="SINHE Auto Zone Logo" id="logo">
+            <!-- Login form that submits to login.php -->
+            <form action="login.php" method="POST">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                
+                <button type="submit">Login</button>
+            </form>
+            <p>Don't have an account? <a href="register.html" id="go-to-register">Register here</a></p>
+        </section>
+    </div>
+</body>
+</html>

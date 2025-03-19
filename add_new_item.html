@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Item - Garage POS System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            color: #333;
+        }
+
+        .navbar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        #navbar-logo {
+           width: 80px; 
+           height: auto;
+           margin-right: 10px; 
+        }
+
+        .navbar h1 {
+            font-size: 1.8rem;
+            color: #f39c12;
+            margin: 0;
+
+        }
+        .navbar a {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            background: #e74c3c;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: #c0392b;
+        }
+
+        .form-container {
+            width: 50%;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h2 {
+            font-size: 2rem;
+            color: #f39c12;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"], button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            background: #2ecc71;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #27ae60;
+        }
+
+        footer {
+            margin-top: 30px;
+            padding: 15px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <img src="logo.png" alt="SINHE Auto Zone Logo" id="navbar-logo">
+        <h1>Inventory Management - Add New Item</h1>
+        <a href="inventorymanagement.php">Back to Inventory</a>
+    </div>
+
+
+    <div class="form-container">
+        <h2>Add a New Item</h2>
+        <form action="save_item.php" method="POST">
+            <label for="item_name">Item Name</label>
+            <input type="text" id="item_name" name="item_name" required>
+        
+            <label for="made_by">Made By</label>
+            <input type="text" id="made_by" name="made_by" required>
+
+            <label for="type">Type</label>
+            <input type="text" id="type" name="type" required>
+        
+            <label for="model">Model</label>
+            <input type="text" id="model" name="model" required>
+        
+            <label for="price">Price (Rs.)</label>
+            <input type="number" id="price" name="price" required>
+        
+            <label for="stock">Stock Quantity</label>
+            <input type="number" id="stock" name="stock" required>
+        
+    
+            <button type="submit" name="submit">Add Item</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>&copy; SINHE Auto Zone. All rights reserved.</p>
+    </footer>
+</body>
+</html>
